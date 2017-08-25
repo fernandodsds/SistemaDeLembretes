@@ -6,6 +6,9 @@ import java.util.GregorianCalendar;
 import org.gnome.*;
 import org.gnome.notify.Notification;
 import org.gnome.notify.Notify;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Duration;
 
 public class Relogio extends Thread{
 	Notification myNotification;
@@ -19,14 +22,14 @@ public class Relogio extends Thread{
 	@Override
 	public void run() {
     	 // initalize the notification system  
-		Notify.init("Program Name");
-		myNotification = new Notification("Isso é um teste!","Programa inicializado","dialog-information");
+		Notify.init("Compromissos");
+		myNotification = null;
+		
 		for(;;) {
 		dataEHora();
-		myNotification.show();
-		
+		System.out.println(new DateTime().getMillisOfDay());
 		try {
-			sleep(1000);
+			sleep(86400000-new DateTime().getMillisOfDay());
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -37,16 +40,14 @@ public class Relogio extends Thread{
 	}
 
 	private void dataEHora() {
-		 Calendar cal = new GregorianCalendar();
-		 int dia = cal.get(Calendar.DAY_OF_MONTH);
-	     int mes = cal.get(Calendar.MONTH);
-	     int ano = cal.get(Calendar.YEAR);
+		 DateTime dataFinal = new DateTime();
+		 
+		 DateTime dataInicial = new  DateTime(2017,8,12,0,0);
+         if(Days.daysBetween(dataInicial, dataFinal).getDays()>= 10) {
+        	 this.myNotification = new Notification("Lembrete","hoje vence o cartão de cabelo","dialog-information");
+     		myNotification.show();
 
-	     int hora = cal.get(Calendar.HOUR);
-         int minuto = cal.get(Calendar.MINUTE);
-         int segundo = cal.get(Calendar.SECOND);
-         if(segundo == 0)
-        	 this.myNotification = new Notification("Isso é um teste!",hora+"hrs"+minuto+"min"+segundo+"seg","dialog-information");
+         }
          
 	}
  
