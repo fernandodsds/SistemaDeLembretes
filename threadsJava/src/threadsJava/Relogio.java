@@ -1,32 +1,26 @@
 package threadsJava;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import org.gnome.*;
 import org.gnome.notify.Notification;
 import org.gnome.notify.Notify;
 import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Duration;
 
 public class Relogio extends Thread{
 	Notification myNotification;
-;
-	public Relogio() {
+	Acontecimento a;
+	public Relogio(Acontecimento a) {
 		// TODO Auto-generated constructor stub
-
+		this.a = a;
 		
 	}
 	
 	@Override
 	public void run() {
-    	 // initalize the notification system  
+    	 // Initialize the notification system  
 		Notify.init("Compromissos");
-		myNotification = null;
-		
+		myNotification = new Notification("Programa inicializado","","dialog-information");
+ 		myNotification.show();
 		for(;;) {
-		dataEHora();
+		dataEHora(a);
 		System.out.println(new DateTime().getMillisOfDay());
 		try {
 			sleep(86400000-new DateTime().getMillisOfDay());
@@ -39,12 +33,10 @@ public class Relogio extends Thread{
 		
 	}
 
-	private void dataEHora() {
-		 DateTime dataFinal = new DateTime();
-		 
-		 DateTime dataInicial = new  DateTime(2017,8,12,0,0);
-         if(Days.daysBetween(dataInicial, dataFinal).getDays()>= 10) {
-        	 this.myNotification = new Notification("Lembrete","hoje vence o cartão de cabelo","dialog-information");
+	private void dataEHora(Acontecimento a) {
+
+         if(a.verificaSeEHoje()) {
+        	 this.myNotification = new Notification(a.getTitulo(),a.getDesc(),"dialog-information");
      		myNotification.show();
 
          }
